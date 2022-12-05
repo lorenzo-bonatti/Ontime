@@ -295,6 +295,5 @@ export const schema = {
         }
     },
     "nonModels": {},
-    "codegenVersion": "3.3.1",
     "version": "a2f92b30082a3dbb6d8fec4be90a3bdd"
 };
