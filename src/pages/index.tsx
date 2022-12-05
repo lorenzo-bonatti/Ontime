@@ -4,6 +4,7 @@ import {AuthRoutes} from './auth-routes';
 import {Error} from './error';
 import {GuestRoutes} from './guest-routes';
 import {Loading} from './loading';
+import {Home} from "@pages/home";
 
 // Import pages
 const Dashboard = lazy(() => import('./dashboard').then(module => ({default: module.Dashboard})));
@@ -31,7 +32,7 @@ export const Pages = (): ReactElement => {
             </Route>
             {/* Guest only routes */}
             <Route element={<GuestRoutes/>}>
-                <Route path='/' element={<></>}/>
+                <Route path='/' element={<Home/>}/>
             </Route>
             {/* Other routes*/}
             <Route
