@@ -23,6 +23,7 @@
 @import "@syncfusion/ej2-react-grids/styles/tailwind";
 @import "@syncfusion/ej2-react-treegrid/styles/tailwind";
 @import '@syncfusion/ej2-react-notifications/styles/tailwind';
+@import '@syncfusion/ej2-react-navigations/styles/tailwind';
 
 .fa-3x {
   @apply text-5xl #{!important}
@@ -38,4 +39,12 @@
 
 .action-button {
   @apply w-full h-10
+}
+
+.sidebar-button {
+  @apply w-full text-left p-2.5 h-14 #{!important}
+}
+
+.sidebar-button > .e-btn-icon {
+  @apply ml-2.5 #{!important}
 }
