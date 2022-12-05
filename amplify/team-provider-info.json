@@ -1,0 +1,20 @@
+{
+  "devel": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-ontime-devel-180455-authRole",
+      "UnauthRoleArn": "arn:aws:iam::134583722200:role/amplify-ontime-devel-180455-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::134583722200:role/amplify-ontime-devel-180455-authRole",
+      "Region": "eu-west-1",
+      "DeploymentBucketName": "amplify-ontime-devel-180455-deployment",
+      "UnauthRoleName": "amplify-ontime-devel-180455-unauthRole",
+      "StackName": "amplify-ontime-devel-180455",
+      "StackId": "arn:aws:cloudformation:eu-west-1:134583722200:stack/amplify-ontime-devel-180455/0a5903d0-4d7d-11ed-b2dd-06bf4b03c811",
+      "AmplifyAppId": "d2c9r5vhjra43m"
+    },
+    "categories": {
+      "auth": {
+        "Ontime": {}
+      }
+    }
+  }
+}

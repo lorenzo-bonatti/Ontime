@@ -1,0 +1,52 @@
+{
+  "version": "1",
+  "cognitoConfig": {
+    "identityPoolName": "testAuthIdentityPool",
+    "allowUnauthenticatedIdentities": false,
+    "resourceNameTruncated": "ontime6a3c2fcb",
+    "userPoolName": "Ontime",
+    "autoVerifiedAttributes": [
+      "email"
+    ],
+    "mfaConfiguration": "OFF",
+    "mfaTypes": [
+      "SMS Text Message"
+    ],
+    "smsAuthenticationMessage": "Your authentication code is {####}",
+    "smsVerificationMessage": "Your verification code is {####}",
+    "emailVerificationSubject": "Ontime - Email verification",
+    "emailVerificationMessage": "<p>Hi</p>\n\n<p>Thanks for getting started with our <b>Ontime!</b></p>\n\n<p>We need a little more information to complete your registration, including a confirmation of your email address.</p>\n\n<p><b>Your verification code is</b></p>\n<h3>{####}</h3>\n\n<p>If you have any questions, send us an email to <a href=\"mailto:imlorenzobonatti@gmail.com\">imlorenzobonatti@gmail.com</a></p>\n\n<hr />\n<p>Thanks</p>\n<p>Best regards, Ontime team.</p>",
+    "defaultPasswordPolicy": false,
+    "passwordPolicyMinLength": 8,
+    "passwordPolicyCharacters": [
+      "Requires Lowercase",
+      "Requires Numbers",
+      "Requires Uppercase"
+    ],
+    "requiredAttributes": [
+      "name"
+    ],
+    "aliasAttributes": [],
+    "userpoolClientGenerateSecret": false,
+    "userpoolClientRefreshTokenValidity": 30,
+    "userpoolClientWriteAttributes": [],
+    "userpoolClientReadAttributes": [],
+    "userpoolClientLambdaRole": "Ontime6a3c2fcb_userpoolclient_lambda_role",
+    "userpoolClientSetAttributes": false,
+    "sharedId": "6a3c2fcb",
+    "resourceName": "Ontime",
+    "authSelections": "identityPoolAndUserPool",
+    "serviceName": "Cognito",
+    "usernameAttributes": [
+      "email"
+    ],
+    "useDefault": "manual",
+    "userPoolGroups": false,
+    "userPoolGroupList": [],
+    "adminQueries": false,
+    "thirdPartyAuth": false,
+    "authProviders": [],
+    "usernameCaseSensitive": false,
+    "useEnabledMfas": true
+  }
+} 

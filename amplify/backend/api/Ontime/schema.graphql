@@ -1,0 +1,40 @@
+type UserSetting @model @auth(rules: [{allow: owner}]) {
+  id: ID!
+  trackerAutoStart: Boolean
+  trackerStopOnNewStart: Boolean
+}
+
+type WorkLog @model @auth(rules: [{allow: owner}]) {
+  id: ID!
+  title: String!
+  description: String
+  startedAt: AWSDateTime!
+  endedAt: AWSDateTime!
+  ttid: ID
+  logServiceObject: AWSJSON
+  state: WorkLogState!
+}
+
+type Tracker @model @auth(rules: [{allow: owner}]) {
+  id: ID!
+  title: String!
+  logDescription: String
+  startedAt: AWSDateTime
+  state: TrackerState!
+  ttid: ID
+  logServiceObject: AWSJSON
+}
+
+enum TrackerState {
+  STOP
+  START
+  PAUSE
+}
+
+enum WorkLogState {
+  PENDING
+  LOGGED
+  DELETED
+  MERGED
+}
+ 
