@@ -9,7 +9,9 @@ export default defineConfig({
     alias: {
       '@pages': '/src/pages',
       '@components': '/src/components',
-      '@models': '/src/models'
+      '@models': '/src/models',
+      // Amplify fix
+      './runtimeConfig': './runtimeConfig.browser'
     }
   },
   css: {
