@@ -286,7 +286,7 @@ export const WorkLogGrid = ({workLogs, onUpdate, onLog, onMerge, onDelete}: Work
             editSettings={{
                 allowEditing: true,
                 allowDeleting: true,
-                mode: 'Normal' as any,
+                mode: 'Dialog' as any,
                 showDeleteConfirmDialog: true
             }}
             // Command click
