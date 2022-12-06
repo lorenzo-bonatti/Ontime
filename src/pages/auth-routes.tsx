@@ -85,7 +85,7 @@ export const AuthRoutes = (): ReactElement => {
                             </div>
                         </SidebarComponent>
                         {/* Content */}
-                        <div>
+                        <div className='h-full'>
                             {/* Header */}
                             <div className='flex justify-end items-center h-14 px-5 shadow'>
                                 {/* Profile */}
