@@ -11,6 +11,7 @@ const Dashboard = lazy(() => import('./dashboard').then(module => ({default: mod
 const Profile = lazy(() => import('./profile').then(module => ({default: module.Profile})));
 const Trackers = lazy(() => import('./trackers').then(module => ({default: module.Trackers})));
 const WorkLogs = lazy(() => import('./work-logs').then(module => ({default: module.WorkLogs})));
+const Settings = lazy(() => import('./settings').then(module => ({default: module.Settings})));
 
 export const Pages = (): ReactElement => {
 
@@ -28,6 +29,7 @@ export const Pages = (): ReactElement => {
                 <Route path='/dashboard' element={<LazyWrapper Page={Dashboard}/>}/>
                 <Route path='/trackers' element={<LazyWrapper Page={Trackers}/>}/>
                 <Route path='/work-logs' element={<LazyWrapper Page={WorkLogs}/>}/>
+                <Route path='/settings' element={<LazyWrapper Page={Settings}/>}/>
                 <Route path='/profile' element={<LazyWrapper Page={Profile}/>}/>
             </Route>
             {/* Guest only routes */}
