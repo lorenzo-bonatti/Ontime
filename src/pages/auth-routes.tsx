@@ -4,6 +4,9 @@ import {Outlet, useNavigate} from 'react-router-dom';
 import {ButtonComponent} from '@syncfusion/ej2-react-buttons';
 import {SidebarComponent} from "@syncfusion/ej2-react-navigations";
 import Logo from '../../public/logo.svg';
+import {DropDownListComponent} from "@syncfusion/ej2-react-dropdowns";
+import ItalyFlag from '@images/flags/italy.png';
+import UKFlag from '@images/flags/united-kingdom.png.png';
 
 export const AuthRoutes = (): ReactElement => {
 
@@ -87,7 +90,19 @@ export const AuthRoutes = (): ReactElement => {
                         {/* Content */}
                         <div className='h-full'>
                             {/* Header */}
-                            <div className='flex justify-end items-center h-14 px-5 shadow'>
+                            <div className='flex justify-end items-center space-x-2.5 h-14 px-5 shadow'>
+                                {/* Language */}
+                                <ButtonComponent cssClass='e-flat'>
+                                    <img src={ItalyFlag} className='w- h-5' alt='Flag'/>
+                                </ButtonComponent>
+                                {/* Notifications */}
+                                <ButtonComponent
+                                    iconCss='fa-solid fa-bell'
+                                    cssClass='relative e-flat'
+                                    onClick={() => navigate('/notifications')}
+                                >
+                                    <span className="e-badge e-badge-primary e-badge-overlap e-badge-dot"></span>
+                                </ButtonComponent>
                                 {/* Profile */}
                                 <ButtonComponent
                                     content={`Ciao ${user?.attributes?.name || ''}`}
