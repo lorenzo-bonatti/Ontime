@@ -25,12 +25,21 @@
 @import '@syncfusion/ej2-react-notifications/styles/tailwind';
 @import '@syncfusion/ej2-react-navigations/styles/tailwind';
 
+// Font Awesome font
+.fa-classic, .fa-regular, .fa-solid, .far, .fas {
+  font-family: "Font Awesome 6 Free" !important;
+}
+
+.fa-solid, .fas {
+  font-weight: 900 !important;
+}
+
 .fa-3x {
   @apply text-5xl #{!important}
 }
 
 .page {
-  @apply p-2
+  @apply p-10 min-h-full
 }
 
 .auth-container {
