@@ -10,6 +10,7 @@ export default defineConfig({
       '@pages': '/src/pages',
       '@components': '/src/components',
       '@models': '/src/models',
+      '@images': '/images',
       // Amplify fix
       './runtimeConfig': './runtimeConfig.browser'
     }

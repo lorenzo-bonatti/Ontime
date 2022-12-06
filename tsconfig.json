@@ -10,6 +10,9 @@
       ],
       "@models/*": [
         "src/models/*"
+      ],
+      "@images/*": [
+        "images/*"
       ]
     },
     "target": "ESNext",
