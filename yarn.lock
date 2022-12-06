@@ -3052,6 +3052,25 @@
   dependencies:
     "@syncfusion/ej2-base" "~20.3.56"
 
+"@syncfusion/ej2-data@~20.3.60":
+  version "20.3.60"
+  resolved "https://registry.yarnpkg.com/@syncfusion/ej2-data/-/ej2-data-20.3.60.tgz#ba28835c0ee71f6853d96c801dcb7c744c22c2e4"
+  integrity sha512-cbs5UnLENJOApNPRulS4HSkVZFND0RQ0SjzQ2YsHe7FyKNQAqZcZbigOZwn5DUidZ0jCQOHXqP8f50g6wE9IvA==
+  dependencies:
+    "@syncfusion/ej2-base" "~20.3.56"
+
+"@syncfusion/ej2-dropdowns@20.3.60":
+  version "20.3.60"
+  resolved "https://registry.yarnpkg.com/@syncfusion/ej2-dropdowns/-/ej2-dropdowns-20.3.60.tgz#30018a2efc5895734b6243db1ce8d32f1560cba1"
+  integrity sha512-OOz0Pvzy9aPObvfbg6xEeNc7Oo8X7AqHL0XujWTXctXpeQoohY9ZGkRv1JONsaj+6aRIOlTafBCDeFp2RAqodg==
+  dependencies:
+    "@syncfusion/ej2-base" "~20.3.56"
+    "@syncfusion/ej2-data" "~20.3.60"
+    "@syncfusion/ej2-inputs" "~20.3.57"
+    "@syncfusion/ej2-lists" "~20.3.56"
+    "@syncfusion/ej2-navigations" "~20.3.60"
+    "@syncfusion/ej2-popups" "~20.3.60"
+
 "@syncfusion/ej2-dropdowns@~20.3.50":
   version "20.3.50"
   resolved "https://registry.yarnpkg.com/@syncfusion/ej2-dropdowns/-/ej2-dropdowns-20.3.50.tgz#ad211e564b73b096bc380ff1723d159b4f4edc64"
@@ -3146,17 +3165,17 @@
     "@syncfusion/ej2-buttons" "~20.3.56"
     "@syncfusion/ej2-data" "~20.3.56"
 
-"@syncfusion/ej2-navigations@20.3.58":
-  version "20.3.58"
-  resolved "https://registry.yarnpkg.com/@syncfusion/ej2-navigations/-/ej2-navigations-20.3.58.tgz#4ed5ca3647280f7de8fc30391755059043ebbfa1"
-  integrity sha512-/4gc0LfVzfZPG2iXi3s9pcH3Pq5AQUUcUR0z+sfwsOsDc93D+/oQHNHiOSj+NFFK0cnxUUOFFJhaDhB0vxDV1A==
+"@syncfusion/ej2-navigations@20.3.60", "@syncfusion/ej2-navigations@~20.3.60":
+  version "20.3.60"
+  resolved "https://registry.yarnpkg.com/@syncfusion/ej2-navigations/-/ej2-navigations-20.3.60.tgz#0138799c42a630c1da37108c006d9a9589fa7f16"
+  integrity sha512-yM6tjnhogfG6XdjARHEzDGlQrUT5mJr8+4wyv5skrkJfOsdcjPVy13lobkXpd6EtefFfOmM7wXKMQc2FTKUrpw==
   dependencies:
     "@syncfusion/ej2-base" "~20.3.56"
     "@syncfusion/ej2-buttons" "~20.3.58"
-    "@syncfusion/ej2-data" "~20.3.56"
+    "@syncfusion/ej2-data" "~20.3.60"
     "@syncfusion/ej2-inputs" "~20.3.57"
     "@syncfusion/ej2-lists" "~20.3.56"
-    "@syncfusion/ej2-popups" "~20.3.58"
+    "@syncfusion/ej2-popups" "~20.3.60"
 
 "@syncfusion/ej2-navigations@~20.3.50":
   version "20.3.50"
@@ -3194,10 +3213,18 @@
     "@syncfusion/ej2-base" "~20.3.50"
     "@syncfusion/ej2-buttons" "~20.3.50"
 
-"@syncfusion/ej2-popups@~20.3.56", "@syncfusion/ej2-popups@~20.3.57", "@syncfusion/ej2-popups@~20.3.58":
+"@syncfusion/ej2-popups@~20.3.56", "@syncfusion/ej2-popups@~20.3.57":
   version "20.3.59"
   resolved "https://registry.yarnpkg.com/@syncfusion/ej2-popups/-/ej2-popups-20.3.59.tgz#dff05347585f6468a85a3b111f6ce04c630aa187"
   integrity sha512-eVTZQPXiVfQvFV/doMLyj8FBsKn2G6/UKEMe+WOSLvSw7NYFaTKX49EEmbPOJvg+K+CshMc5vrVGUo4/FwsAeg==
+  dependencies:
+    "@syncfusion/ej2-base" "~20.3.56"
+    "@syncfusion/ej2-buttons" "~20.3.58"
+
+"@syncfusion/ej2-popups@~20.3.60":
+  version "20.3.60"
+  resolved "https://registry.yarnpkg.com/@syncfusion/ej2-popups/-/ej2-popups-20.3.60.tgz#52dc3f0f5da84522419a70ee100f884c98af50ab"
+  integrity sha512-nfvRAOFNY8SL9nmyCoCr6oALZJdTdzDxOZs3pZn4Q5mq67hKj1+tS2aJisiV8OBJ/TFMXh+YblaVyXL710waLg==
   dependencies:
     "@syncfusion/ej2-base" "~20.3.56"
     "@syncfusion/ej2-buttons" "~20.3.58"
@@ -3234,6 +3261,15 @@
     "@syncfusion/ej2-calendars" "20.3.50"
     "@syncfusion/ej2-react-base" "~20.3.47"
 
+"@syncfusion/ej2-react-dropdowns@^20.3.60":
+  version "20.3.60"
+  resolved "https://registry.yarnpkg.com/@syncfusion/ej2-react-dropdowns/-/ej2-react-dropdowns-20.3.60.tgz#589449b7590b80623e029d6e65c64ee7fcd6e8c5"
+  integrity sha512-3qZ+bROyzMqa/FpDYj6/9xTZx13eNF+htnB21nURJE78y908hFHEjVBzlPhBPVnTol+YhO/q0MTQOMIQnsNc5A==
+  dependencies:
+    "@syncfusion/ej2-base" "~20.3.56"
+    "@syncfusion/ej2-dropdowns" "20.3.60"
+    "@syncfusion/ej2-react-base" "~20.3.56"
+
 "@syncfusion/ej2-react-grids@^20.3.50":
   version "20.3.50"
   resolved "https://registry.yarnpkg.com/@syncfusion/ej2-react-grids/-/ej2-react-grids-20.3.50.tgz#227795b43639fca5d2986f53893c667496886456"
@@ -3252,13 +3288,13 @@
     "@syncfusion/ej2-inputs" "20.3.50"
     "@syncfusion/ej2-react-base" "~20.3.47"
 
-"@syncfusion/ej2-react-navigations@^20.3.58":
-  version "20.3.58"
-  resolved "https://registry.yarnpkg.com/@syncfusion/ej2-react-navigations/-/ej2-react-navigations-20.3.58.tgz#49173a1a517e901f70e6ba9a655bc830b635dedb"
-  integrity sha512-oR5gaJLqx7DR8DkVsNR5vd9MMyb5n1X1w5leQ7cBbWgWkVi3IZyez4Kv9cX/Ld4oCDyWiRqqmspvE6o3B+vE0A==
+"@syncfusion/ej2-react-navigations@^20.3.60":
+  version "20.3.60"
+  resolved "https://registry.yarnpkg.com/@syncfusion/ej2-react-navigations/-/ej2-react-navigations-20.3.60.tgz#95ac00a6b7e4fbe16209d6790d9a9a7347e61492"
+  integrity sha512-dVCT8qwowq3C40T/NhUDu/FbAUIDOvw1CIkKp+LJYUNo05hQFy/LiZK4QqaduXXF7d9e2/vc66y6gXE4czk2kg==
   dependencies:
     "@syncfusion/ej2-base" "~20.3.56"
-    "@syncfusion/ej2-navigations" "20.3.58"
+    "@syncfusion/ej2-navigations" "20.3.60"
     "@syncfusion/ej2-react-base" "~20.3.56"
 
 "@syncfusion/ej2-react-notifications@^20.3.47":
