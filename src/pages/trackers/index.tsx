@@ -71,38 +71,12 @@ export const Trackers = (): ReactElement => {
         error: null
     });
 
-    // Load trackers
-    const loadTrackerList = async () => {
-        // Loading
-        dispatch({type: 'LOADING'});
-        // Request
-        try {
-            // Query trackers
-            const trackers = await DataStore.query(Tracker);
-            // Update list
-            dispatch({type: 'UPDATE', data: trackers});
-        } catch (e) {
-            console.error('loadTrackerList', {e});
-            // Feedback
-            dispatch({type: 'ERROR', error: 'Error loading trackers'});
-        }
-    }
-
-    // Initial load
     useEffect(() => {
-        // Wait DataStore
-        DataStore.start().then(() => {
-            // Load trackers
-            loadTrackerList().then(() => true);
-        });
-    }, []);
-
-    useEffect(() => {
-        // Live update
-        /*DataStore.observeQuery(Tracker).subscribe(snapshot => {
+        // Observer trackers
+        DataStore.observeQuery(Tracker).subscribe(snapshot => {
             // Update list
             dispatch({type: 'UPDATE', data: snapshot.items});
-        });*/
+        });
     }, []);
 
     /**
@@ -125,8 +99,6 @@ export const Trackers = (): ReactElement => {
                     type: 'success'
                 })
             )
-            // Update list
-            loadTrackerList().then();
         } catch (e) {
             console.error(e);
             // Feedback
@@ -153,7 +125,7 @@ export const Trackers = (): ReactElement => {
         // Each tracker
         for (const runningTracker of runningTrackers) {
             // Pause current tracker
-            await onTrackerFinish(runningTracker, true, false);
+            await onTrackerFinish(runningTracker, true);
         }
         // Update this tracker with START
         await updateTracker({
@@ -161,8 +133,6 @@ export const Trackers = (): ReactElement => {
             state: TrackerState.START,
             startedAt: tracker.startedAt || moment().utc().toISOString()
         });
-        // Refresh list
-        loadTrackerList().then(() => true);
     }
 
     /**
@@ -213,9 +183,8 @@ export const Trackers = (): ReactElement => {
      * Update the tracker data and create a new WorkLog
      * @param tracker
      * @param isPause
-     * @param refresh
      */
-    const onTrackerFinish = async (tracker: Tracker, isPause = false, refresh = true) => {
+    const onTrackerFinish = async (tracker: Tracker, isPause = false) => {
         try {
             const ttid = uuidV4();
             // Create new log
@@ -257,10 +226,6 @@ export const Trackers = (): ReactElement => {
                     type: 'success'
                 })
             )
-            // Refresh list
-            if (refresh) {
-                loadTrackerList().then(() => true);
-            }
         } catch (e) {
             console.error(e);
             // Feedback
@@ -288,8 +253,6 @@ export const Trackers = (): ReactElement => {
                     type: 'success'
                 })
             )
-            // Update list
-            loadTrackerList().then();
         } catch (e) {
             console.error('deleteTracker', {e});
             // Feedback
@@ -309,7 +272,6 @@ export const Trackers = (): ReactElement => {
             <Error
                 title={error}
                 enableRetry={true}
-                onRetry={() => loadTrackerList()}
             />
         )
     }
