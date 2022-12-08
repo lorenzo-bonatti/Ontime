@@ -4,7 +4,6 @@ import moment from 'moment';
 import {TextBoxComponent} from '@syncfusion/ej2-react-inputs';
 import {DateTimePickerComponent} from '@syncfusion/ej2-react-calendars';
 import {ButtonComponent} from '@syncfusion/ej2-react-buttons';
-import {v4 as uuidV4} from 'uuid';
 import {DialogUtility} from '@syncfusion/ej2-popups';
 import {Dialog} from '@syncfusion/ej2-react-popups';
 import {delayCallback} from '../../utils';
@@ -146,6 +145,26 @@ export const TrackerTimer = (
         }
     }
 
+    const beforeFinish = async () => {
+        // Check current tracker state
+        if (tracker.state === TrackerState.PAUSE) {
+            // Update tracker
+            dispatch({
+                action: "UPDATE",
+                data: {
+                    ...tracker,
+                    logDescription: null,
+                    startedAt: null,
+                    ttid: null,
+                    state: TrackerState.STOP
+                }
+            })
+        } else if (tracker.state === TrackerState.START) {
+            // Finish the tracking
+            await finish();
+        }
+    }
+
     const finish = async () => {
         try {
             // Callback on finish
@@ -232,36 +251,42 @@ export const TrackerTimer = (
             {/* Action buttons */}
             <div className="flex justify-around space-x-2.5">
                 {
-                    // Check state
+                    // Start / Resume button
                     data.state === TrackerState.STOP || data.state === TrackerState.PAUSE
                         ? <ButtonComponent
-                            content="Start"
+                            content={data.state === TrackerState.STOP ? 'Start' : 'Resume'}
                             iconCss="fa-solid fa-play"
                             isPrimary
                             cssClass='action-button'
                             onClick={() => start()}
                         />
-                        : <>
-                            {/* Finish */}
-                            <ButtonComponent
-                                content="Finish"
-                                iconCss="fa-solid fa-flag-checkered"
-                                isPrimary
-                                cssClass='action-button'
-                                onClick={() => finish()}
-                            />
-                            {/* Pause */}
-                            <ButtonComponent
-                                content="Pause"
-                                iconCss="fa-solid fa-pause"
-                                cssClass='action-button'
-                                onClick={() => pause()}
-                            />
-                        </>
+                        : <></>
+                }
+                {
+                    // Finish button
+                    data.state === TrackerState.START || data.state === TrackerState.PAUSE
+                        ? <ButtonComponent
+                            content="Finish"
+                            iconCss="fa-solid fa-flag-checkered"
+                            isPrimary
+                            cssClass='action-button'
+                            onClick={() => beforeFinish()}
+                        />
+                        : <></>
+                }
+                {
+                    // Pause button
+                    data.state === TrackerState.START
+                        ? <ButtonComponent
+                            content="Pause"
+                            iconCss="fa-solid fa-pause"
+                            cssClass='action-button'
+                            onClick={() => pause()}
+                        />
+                        : <></>
                 }
                 {/* Delete button */}
                 <ButtonComponent
-                    content="Delete"
                     iconCss="fa-solid fa-trash"
                     cssClass='action-button'
                     onClick={() => deleteTracker()}
