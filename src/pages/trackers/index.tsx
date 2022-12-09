@@ -3,12 +3,16 @@ import {Tracker, TrackerState, WorkLog, WorkLogState} from "@models/index";
 import {Error} from "@pages/error";
 import {SkeletonComponent} from "@syncfusion/ej2-react-notifications";
 import {DataStore} from 'aws-amplify';
-import React, {ReactElement, Reducer, useEffect, useReducer} from "react";
+import React, {ReactElement, Reducer, useEffect, useReducer, useState} from "react";
 import {useStoreDispatch} from "../../store";
 import {showFeedback} from "../../store/feedback";
 import {TrackerTimer} from "@components/tracker-timer";
 import moment from "moment";
 import {v4 as uuidV4} from 'uuid';
+import {AppBarComponent} from "@syncfusion/ej2-react-navigations";
+import {TextBoxComponent} from "@syncfusion/ej2-react-inputs";
+import {ButtonComponent} from "@syncfusion/ej2-react-buttons";
+import {delayCallback} from "../../utils";
 
 export const Trackers = (): ReactElement => {
 
@@ -71,13 +75,31 @@ export const Trackers = (): ReactElement => {
         error: null
     });
 
+    // States
+    const [filter, setFilter] = useState<string>('');
+
     useEffect(() => {
         // Observer trackers
-        DataStore.observeQuery(Tracker).subscribe(snapshot => {
+        const obs = DataStore.observeQuery(Tracker, t => (
+            t.or(t => t.title('contains', filter))
+        )).subscribe(snapshot => {
             // Update list
             dispatch({type: 'UPDATE', data: snapshot.items});
         });
-    }, []);
+        // On exit
+        return () => {
+            // Unsubscribe observer
+            obs.unsubscribe();
+        }
+    }, [filter]);
+
+    const onFilter = (text: string) => {
+        // Delay action
+        delayCallback(() => {
+            // Setup filters
+            setFilter(text);
+        })
+    }
 
     /**
      * Add tracker
@@ -277,24 +299,57 @@ export const Trackers = (): ReactElement => {
     }
 
     return (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-            {
-                // Each tracker
-                trackers.map(tracker => (
-                    <TrackerTimer
-                        key={tracker.id}
-                        tracker={tracker}
-                        onStart={startTracker}
-                        onUpdate={updateTracker}
-                        onFinish={onTrackerFinish}
-                        onDelete={deleteTracker}
-                    />
-                ))
-            }
-            {/* Loading */}
-            {loading ? <SkeletonComponent shape='Rectangle' width='100%' height='100%'/> : <></>}
-            {/* Add Tracker */}
-            <AddTracker onDefaultTracker={() => addTracker()} onNormalTracker={() => addTracker()}/>
+        <div className='page'>
+            <AppBarComponent cssClass='page-bar'>
+                <h1 className="page-title"><i className="fa-solid fa-stopwatch"/> Trackers</h1>
+                <div className="e-appbar-spacer"></div>
+                {/* Actions bar */}
+                <div className='flex items-center space-x-5'>
+                    {/* Search input */}
+                    <div className="e-input-group">
+                        <input
+                            type="text"
+                            placeholder="Search"
+                            className="e-input"
+                            onChange={(args) => onFilter(args.target.value)}
+                        />
+                        <span className="e-input-group-icon fa-solid fa-search"/>
+                    </div>
+                    {/* Switch layout view */}
+                    <div className="e-btn-group">
+                        {/* Card */}
+                        <input type="radio" id="trackers-card-layout" name="trackers-layout"/>
+                        <label className="e-btn e-outline e-primary" htmlFor="trackers-card-layout">
+                            <i className="fa-solid fa-table-columns"/>
+                        </label>
+                        {/* Grid */}
+                        <input type="radio" id="trackers-grid-layout" name="trackers-layout"/>
+                        <label className="e-btn e-outline e-primary" htmlFor="trackers-grid-layout">
+                            <i className="fa-solid fa-table-list"/>
+                        </label>
+                    </div>
+                </div>
+            </AppBarComponent>
+            {/* Trackers */}
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                {
+                    // Each tracker
+                    trackers.map(tracker => (
+                        <TrackerTimer
+                            key={tracker.id}
+                            tracker={tracker}
+                            onStart={startTracker}
+                            onUpdate={updateTracker}
+                            onFinish={onTrackerFinish}
+                            onDelete={deleteTracker}
+                        />
+                    ))
+                }
+                {/* Loading */}
+                {loading ? <SkeletonComponent shape='Rectangle' width='100%' height='100%' /> : <></>}
+                {/* Add Tracker */}
+                <AddTracker onDefaultTracker={() => addTracker()} onNormalTracker={() => addTracker()}/>
+            </div>
         </div>
     )
 }

@@ -37,7 +37,11 @@
 // Components
 @layer components {
   .page {
-    @apply p-10 min-h-full
+    @apply p-7 min-h-full;
+
+    .page-title {
+      @apply text-xl text-primary;
+    }
   }
 
   .tracker {
@@ -58,6 +62,12 @@
   @apply w-full h-10
 }
 
+// App Bar
+.e-appbar.page-bar {
+  @apply shadow-none mb-5;
+}
+
+// Sidebar
 .sidebar-button {
   @apply w-full text-left p-2.5 h-14 #{!important}
 }
