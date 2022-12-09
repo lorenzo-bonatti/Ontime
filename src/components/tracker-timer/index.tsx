@@ -221,7 +221,7 @@ export const TrackerTimer = (
     ), [data.startedAt]);
 
     return (
-        <div>
+        <div className='tracker'>
             {/* Title */}
             <TextBoxComponent
                 placeholder='Title'
@@ -237,19 +237,21 @@ export const TrackerTimer = (
                 placeholder='Log description'
                 floatLabelType='Auto'
                 multiline
-                htmlAttributes={{rows: '4'}}
+                htmlAttributes={{rows: '3'}}
                 value={data.logDescription as any}
                 change={(args) => dispatch({
                     action: "UPDATE",
                     data: {logDescription: args.value}
                 })}
             />
-            {/* Start at */}
-            {StartAtMemo}
-            {/* Duration */}
-            <p>Duration: {duration}</p>
+            {/* Date */}
+            <div>
+                {/* Start at */}
+                {StartAtMemo}
+                <p className='text-sm p-1'>Duration: {duration}</p>
+            </div>
             {/* Action buttons */}
-            <div className="flex justify-around space-x-2.5">
+            <div className="flex flex-row space-x-2.5">
                 {
                     // Start / Resume button
                     data.state === TrackerState.STOP || data.state === TrackerState.PAUSE
@@ -257,7 +259,7 @@ export const TrackerTimer = (
                             content={data.state === TrackerState.STOP ? 'Start' : 'Resume'}
                             iconCss="fa-solid fa-play"
                             isPrimary
-                            cssClass='action-button'
+                            cssClass='flex-1 h-10'
                             onClick={() => start()}
                         />
                         : <></>
@@ -268,8 +270,8 @@ export const TrackerTimer = (
                         ? <ButtonComponent
                             content="Finish"
                             iconCss="fa-solid fa-flag-checkered"
-                            isPrimary
-                            cssClass='action-button'
+                            isPrimary={true}
+                            cssClass={`flex-1 h-10 ${data.state === TrackerState.PAUSE ? 'e-outline e-primary' : 'e-primary'}`}
                             onClick={() => beforeFinish()}
                         />
                         : <></>
@@ -280,7 +282,7 @@ export const TrackerTimer = (
                         ? <ButtonComponent
                             content="Pause"
                             iconCss="fa-solid fa-pause"
-                            cssClass='action-button'
+                            cssClass='flex-1 h-10'
                             onClick={() => pause()}
                         />
                         : <></>
@@ -288,7 +290,7 @@ export const TrackerTimer = (
                 {/* Delete button */}
                 <ButtonComponent
                     iconCss="fa-solid fa-trash"
-                    cssClass='action-button'
+                    cssClass='flex-none h-10'
                     onClick={() => deleteTracker()}
                 />
             </div>

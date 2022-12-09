@@ -1,6 +1,5 @@
 import React, {ReactElement} from 'react';
 import {ButtonComponent} from '@syncfusion/ej2-react-buttons';
-import './index.scss';
 
 interface AddTrackerProps {
 	onDefaultTracker: () => void,
@@ -20,7 +19,7 @@ export const AddTracker = (props: AddTrackerProps): ReactElement => {
 			</div>
 			{/* Other options */}
 			<div className='space-y-2.5'>
-				<p>Other tracker options</p>
+				<p>Other options</p>
 				<ButtonComponent
 					content='Normal Tracker'
 					iconCss='fa-solid fa-business-time'
