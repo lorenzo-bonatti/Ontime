@@ -1,18 +1,15 @@
-import {AddTracker} from "@components/add-tracker";
 import {Tracker, TrackerState, WorkLog, WorkLogState} from "@models/index";
 import {Error} from "@pages/error";
-import {SkeletonComponent} from "@syncfusion/ej2-react-notifications";
 import {DataStore} from 'aws-amplify';
 import React, {ReactElement, Reducer, useEffect, useReducer, useState} from "react";
 import {useStoreDispatch} from "../../store";
 import {showFeedback} from "../../store/feedback";
-import {TrackerTimer} from "@components/tracker-timer";
 import moment from "moment";
 import {v4 as uuidV4} from 'uuid';
 import {AppBarComponent} from "@syncfusion/ej2-react-navigations";
-import {TextBoxComponent} from "@syncfusion/ej2-react-inputs";
-import {ButtonComponent} from "@syncfusion/ej2-react-buttons";
 import {delayCallback} from "../../utils";
+import {TrackersCardView} from "@components/trackers-card-view";
+import {SkeletonComponent} from "@syncfusion/ej2-react-notifications";
 
 export const Trackers = (): ReactElement => {
 
@@ -79,12 +76,17 @@ export const Trackers = (): ReactElement => {
     const [filter, setFilter] = useState<string>('');
 
     useEffect(() => {
+        // Setup loading
+        dispatch({type: 'LOADING'});
         // Observer trackers
         const obs = DataStore.observeQuery(Tracker, t => (
             t.or(t => t.title('contains', filter))
         )).subscribe(snapshot => {
-            // Update list
-            dispatch({type: 'UPDATE', data: snapshot.items});
+            // Check if isSynced
+            if (snapshot.isSynced) {
+                // Update list
+                dispatch({type: 'UPDATE', data: snapshot.items});
+            }
         });
         // On exit
         return () => {
@@ -300,6 +302,7 @@ export const Trackers = (): ReactElement => {
 
     return (
         <div className='page'>
+            {/* AppBar - Title */}
             <AppBarComponent cssClass='page-bar'>
                 <h1 className="page-title"><i className="fa-solid fa-stopwatch"/> Trackers</h1>
                 <div className="e-appbar-spacer"></div>
@@ -331,25 +334,18 @@ export const Trackers = (): ReactElement => {
                 </div>
             </AppBarComponent>
             {/* Trackers */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-                {
-                    // Each tracker
-                    trackers.map(tracker => (
-                        <TrackerTimer
-                            key={tracker.id}
-                            tracker={tracker}
-                            onStart={startTracker}
-                            onUpdate={updateTracker}
-                            onFinish={onTrackerFinish}
-                            onDelete={deleteTracker}
-                        />
-                    ))
-                }
-                {/* Loading */}
-                {loading ? <SkeletonComponent shape='Rectangle' width='100%' height='100%' /> : <></>}
-                {/* Add Tracker */}
-                <AddTracker onDefaultTracker={() => addTracker()} onNormalTracker={() => addTracker()}/>
-            </div>
+            {
+                loading
+                    ? <SkeletonComponent width='100%' height='350px'/>
+                    : <TrackersCardView
+                        trackers={trackers}
+                        onAddTracker={addTracker}
+                        onStartTracker={startTracker}
+                        onUpdateTracker={updateTracker}
+                        onFinishTracker={onTrackerFinish}
+                        onDeleteTracker={deleteTracker}
+                    />
+            }
         </div>
     )
 }
