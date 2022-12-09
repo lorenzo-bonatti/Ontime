@@ -208,7 +208,7 @@ export const Trackers = (): ReactElement => {
      * @param tracker
      * @param isPause
      */
-    const onTrackerFinish = async (tracker: Tracker, isPause = false) => {
+    const finishTracker = async (tracker: Tracker, isPause = false) => {
         try {
             const ttid = uuidV4();
             // Create new log
@@ -342,7 +342,7 @@ export const Trackers = (): ReactElement => {
                         onAddTracker={addTracker}
                         onStartTracker={startTracker}
                         onUpdateTracker={updateTracker}
-                        onFinishTracker={onTrackerFinish}
+                        onFinishTracker={finishTracker}
                         onDeleteTracker={deleteTracker}
                     />
             }
