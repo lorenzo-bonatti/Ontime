@@ -10,6 +10,15 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "language": {
+                    "name": "language",
+                    "isArray": false,
+                    "type": {
+                        "enum": "Languages"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "trackerAutoStart": {
                     "name": "trackerAutoStart",
                     "isArray": false,
@@ -21,6 +30,15 @@ export const schema = {
                     "name": "trackerStopOnNewStart",
                     "isArray": false,
                     "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "trackerViewMode": {
+                    "name": "trackerViewMode",
+                    "isArray": false,
+                    "type": {
+                        "enum": "TrackerViewModes"
+                    },
                     "isRequired": false,
                     "attributes": []
                 },
@@ -276,6 +294,20 @@ export const schema = {
         }
     },
     "enums": {
+        "Languages": {
+            "name": "Languages",
+            "values": [
+                "IT",
+                "EN"
+            ]
+        },
+        "TrackerViewModes": {
+            "name": "TrackerViewModes",
+            "values": [
+                "CARD",
+                "GRID"
+            ]
+        },
         "WorkLogState": {
             "name": "WorkLogState",
             "values": [
@@ -295,5 +327,5 @@ export const schema = {
         }
     },
     "nonModels": {},
-    "version": "a2f92b30082a3dbb6d8fec4be90a3bdd"
+    "version": "6da27a41da571e1632eabb97ecabac96"
 };
