@@ -5,6 +5,15 @@
 // Font awesome
 @import "@fortawesome/fontawesome-free/css/all.min.css";
 
+// Font Awesome font
+.fa-classic, .fa-regular, .fa-solid, .far, .fas {
+  font-family: "Font Awesome 6 Free" !important;
+}
+
+.fa-solid, .fas {
+  font-weight: 900 !important;
+}
+
 // Syncfusion
 @import "@syncfusion/ej2-base/styles/tailwind";
 @import "@syncfusion/ej2-buttons/styles/tailwind";
@@ -25,21 +34,24 @@
 @import '@syncfusion/ej2-react-notifications/styles/tailwind';
 @import '@syncfusion/ej2-react-navigations/styles/tailwind';
 
-// Font Awesome font
-.fa-classic, .fa-regular, .fa-solid, .far, .fas {
-  font-family: "Font Awesome 6 Free" !important;
-}
+// Components
+@layer components {
+  .page {
+    @apply p-7 min-h-full;
 
-.fa-solid, .fas {
-  font-weight: 900 !important;
+    .page-title {
+      @apply text-xl text-primary;
+    }
+  }
+
+  .tracker {
+    @apply flex flex-col justify-between p-5 border-2 rounded-md;
+    min-height: 350px;
+  }
 }
 
 .fa-3x {
   @apply text-5xl #{!important}
-}
-
-.page {
-  @apply p-10 min-h-full
 }
 
 .auth-container {
@@ -50,10 +62,29 @@
   @apply w-full h-10
 }
 
+// App Bar
+.e-appbar.page-bar {
+  @apply shadow-none mb-5;
+}
+
+// Sidebar
 .sidebar-button {
   @apply w-full text-left p-2.5 h-14 #{!important}
 }
 
 .sidebar-button > .e-btn-icon {
   @apply ml-2.5 #{!important}
+}
+
+// Trackers
+.add-tracker {
+  @apply tracker border-primary;
+
+  .default-btn {
+    @apply text-primary hover:text-indigo-700 cursor-pointer;
+  }
+
+  .jira-tracker {
+    @apply bg-primary text-white
+  }
 }

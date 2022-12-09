@@ -1,14 +1,15 @@
-import {AddTracker} from "@components/add-tracker";
 import {Tracker, TrackerState, WorkLog, WorkLogState} from "@models/index";
 import {Error} from "@pages/error";
-import {SkeletonComponent} from "@syncfusion/ej2-react-notifications";
 import {DataStore} from 'aws-amplify';
-import React, {ReactElement, Reducer, useEffect, useReducer} from "react";
+import React, {ReactElement, Reducer, useEffect, useReducer, useState} from "react";
 import {useStoreDispatch} from "../../store";
 import {showFeedback} from "../../store/feedback";
-import {TrackerTimer} from "@components/tracker-timer";
 import moment from "moment";
 import {v4 as uuidV4} from 'uuid';
+import {AppBarComponent} from "@syncfusion/ej2-react-navigations";
+import {delayCallback} from "../../utils";
+import {TrackersCardView} from "@components/trackers-card-view";
+import {SkeletonComponent} from "@syncfusion/ej2-react-notifications";
 
 export const Trackers = (): ReactElement => {
 
@@ -71,39 +72,36 @@ export const Trackers = (): ReactElement => {
         error: null
     });
 
-    // Load trackers
-    const loadTrackerList = async () => {
-        // Loading
+    // States
+    const [filter, setFilter] = useState<string>('');
+
+    useEffect(() => {
+        // Setup loading
         dispatch({type: 'LOADING'});
-        // Request
-        try {
-            // Query trackers
-            const trackers = await DataStore.query(Tracker);
-            // Update list
-            dispatch({type: 'UPDATE', data: trackers});
-        } catch (e) {
-            console.error('loadTrackerList', {e});
-            // Feedback
-            dispatch({type: 'ERROR', error: 'Error loading trackers'});
-        }
-    }
-
-    // Initial load
-    useEffect(() => {
-        // Wait DataStore
-        DataStore.start().then(() => {
-            // Load trackers
-            loadTrackerList().then(() => true);
+        // Observer trackers
+        const obs = DataStore.observeQuery(Tracker, t => (
+            t.or(t => t.title('contains', filter))
+        )).subscribe(snapshot => {
+            // Check if isSynced
+            if (snapshot.isSynced) {
+                // Update list
+                dispatch({type: 'UPDATE', data: snapshot.items});
+            }
         });
-    }, []);
+        // On exit
+        return () => {
+            // Unsubscribe observer
+            obs.unsubscribe();
+        }
+    }, [filter]);
 
-    useEffect(() => {
-        // Live update
-        /*DataStore.observeQuery(Tracker).subscribe(snapshot => {
-            // Update list
-            dispatch({type: 'UPDATE', data: snapshot.items});
-        });*/
-    }, []);
+    const onFilter = (text: string) => {
+        // Delay action
+        delayCallback(() => {
+            // Setup filters
+            setFilter(text);
+        })
+    }
 
     /**
      * Add tracker
@@ -125,8 +123,6 @@ export const Trackers = (): ReactElement => {
                     type: 'success'
                 })
             )
-            // Update list
-            loadTrackerList().then();
         } catch (e) {
             console.error(e);
             // Feedback
@@ -153,7 +149,7 @@ export const Trackers = (): ReactElement => {
         // Each tracker
         for (const runningTracker of runningTrackers) {
             // Pause current tracker
-            await onTrackerFinish(runningTracker, true, false);
+            await finishTracker(runningTracker, true);
         }
         // Update this tracker with START
         await updateTracker({
@@ -161,8 +157,6 @@ export const Trackers = (): ReactElement => {
             state: TrackerState.START,
             startedAt: tracker.startedAt || moment().utc().toISOString()
         });
-        // Refresh list
-        loadTrackerList().then(() => true);
     }
 
     /**
@@ -213,9 +207,8 @@ export const Trackers = (): ReactElement => {
      * Update the tracker data and create a new WorkLog
      * @param tracker
      * @param isPause
-     * @param refresh
      */
-    const onTrackerFinish = async (tracker: Tracker, isPause = false, refresh = true) => {
+    const finishTracker = async (tracker: Tracker, isPause = false) => {
         try {
             const ttid = uuidV4();
             // Create new log
@@ -257,10 +250,6 @@ export const Trackers = (): ReactElement => {
                     type: 'success'
                 })
             )
-            // Refresh list
-            if (refresh) {
-                loadTrackerList().then(() => true);
-            }
         } catch (e) {
             console.error(e);
             // Feedback
@@ -288,8 +277,6 @@ export const Trackers = (): ReactElement => {
                     type: 'success'
                 })
             )
-            // Update list
-            loadTrackerList().then();
         } catch (e) {
             console.error('deleteTracker', {e});
             // Feedback
@@ -309,30 +296,56 @@ export const Trackers = (): ReactElement => {
             <Error
                 title={error}
                 enableRetry={true}
-                onRetry={() => loadTrackerList()}
             />
         )
     }
 
     return (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 p-2.5">
+        <div className='page'>
+            {/* AppBar - Title */}
+            <AppBarComponent cssClass='page-bar'>
+                <h1 className="page-title"><i className="fa-solid fa-stopwatch"/> Trackers</h1>
+                <div className="e-appbar-spacer"></div>
+                {/* Actions bar */}
+                <div className='flex items-center space-x-5'>
+                    {/* Search input */}
+                    <div className="e-input-group">
+                        <input
+                            type="text"
+                            placeholder="Search"
+                            className="e-input"
+                            onChange={(args) => onFilter(args.target.value)}
+                        />
+                        <span className="e-input-group-icon fa-solid fa-search"/>
+                    </div>
+                    {/* Switch layout view */}
+                    <div className="e-btn-group">
+                        {/* Card */}
+                        <input type="radio" id="trackers-card-layout" name="trackers-layout"/>
+                        <label className="e-btn e-outline e-primary" htmlFor="trackers-card-layout">
+                            <i className="fa-solid fa-table-columns"/>
+                        </label>
+                        {/* Grid */}
+                        <input type="radio" id="trackers-grid-layout" name="trackers-layout"/>
+                        <label className="e-btn e-outline e-primary" htmlFor="trackers-grid-layout">
+                            <i className="fa-solid fa-table-list"/>
+                        </label>
+                    </div>
+                </div>
+            </AppBarComponent>
+            {/* Trackers */}
             {
-                // Each tracker
-                trackers.map(tracker => (
-                    <TrackerTimer
-                        key={tracker.id}
-                        tracker={tracker}
-                        onStart={startTracker}
-                        onUpdate={updateTracker}
-                        onFinish={onTrackerFinish}
-                        onDelete={deleteTracker}
+                loading
+                    ? <SkeletonComponent width='100%' height='350px'/>
+                    : <TrackersCardView
+                        trackers={trackers}
+                        onAddTracker={addTracker}
+                        onStartTracker={startTracker}
+                        onUpdateTracker={updateTracker}
+                        onFinishTracker={finishTracker}
+                        onDeleteTracker={deleteTracker}
                     />
-                ))
             }
-            {/* Loading */}
-            {loading ? <SkeletonComponent shape='Rectangle' width='100%' height='100%'/> : <></>}
-            {/* Add Tracker */}
-            <AddTracker onDefaultTracker={() => addTracker()} onNormalTracker={() => addTracker()}/>
         </div>
     )
 }
