@@ -149,7 +149,7 @@ export const Trackers = (): ReactElement => {
         // Each tracker
         for (const runningTracker of runningTrackers) {
             // Pause current tracker
-            await onTrackerFinish(runningTracker, true);
+            await finishTracker(runningTracker, true);
         }
         // Update this tracker with START
         await updateTracker({
