@@ -2,6 +2,16 @@
 import { initSchema } from '@aws-amplify/datastore';
 import { schema } from './schema';
 
+const Languages = {
+  "IT": "IT",
+  "EN": "EN"
+};
+
+const TrackerViewModes = {
+  "CARD": "CARD",
+  "GRID": "GRID"
+};
+
 const WorkLogState = {
   "PENDING": "PENDING",
   "LOGGED": "LOGGED",
@@ -21,6 +31,8 @@ export {
   UserSetting,
   WorkLog,
   Tracker,
+  Languages,
+  TrackerViewModes,
   WorkLogState,
   TrackerState
 };

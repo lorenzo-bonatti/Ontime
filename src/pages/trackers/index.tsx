@@ -1,15 +1,16 @@
-import {Tracker, TrackerState, WorkLog, WorkLogState} from "@models/index";
+import {Tracker, TrackerState, TrackerViewModes, UserSetting, WorkLog, WorkLogState} from "@models/index";
 import {Error} from "@pages/error";
 import {DataStore} from 'aws-amplify';
-import React, {ReactElement, Reducer, useEffect, useReducer, useState} from "react";
+import React, {ReactElement, Reducer, useEffect, useMemo, useReducer, useState} from "react";
 import {useStoreDispatch} from "../../store";
 import {showFeedback} from "../../store/feedback";
 import moment from "moment";
 import {v4 as uuidV4} from 'uuid';
 import {AppBarComponent} from "@syncfusion/ej2-react-navigations";
 import {delayCallback} from "../../utils";
-import {TrackersCardView} from "@components/trackers-card-view";
 import {SkeletonComponent} from "@syncfusion/ej2-react-notifications";
+import {TrackersCardView} from "@components/trackers-card-view";
+import {TrackersGridView} from "@components/trackers-grid-view";
 
 export const Trackers = (): ReactElement => {
 
@@ -18,38 +19,50 @@ export const Trackers = (): ReactElement => {
 
     // Reducer types
     interface ReducerData {
-        trackers: Tracker[],
-        loading: boolean,
+        trackers: Tracker[]
+        userSetting: UserSetting | null
+        synced: {
+            trackers: boolean
+            userSetting: boolean
+        }
+        loading: boolean
         error: string | null
     }
 
     interface ReducerPayload {
-        type: string
-        data?: Tracker[]
+        action: string
+        trackers?: {
+            items: Tracker[]
+            isSynced: boolean
+        }
+        userSetting?: {
+            item: UserSetting | null,
+            isSynced: boolean
+        }
         error?: string
     }
 
     // Setup reducer
     const [{
         trackers,
+        userSetting,
         loading,
         error
     }, dispatch] = useReducer<Reducer<ReducerData, ReducerPayload>>((state, payload) => {
-        switch (payload.type) {
+        switch (payload.action) {
             case 'UPDATE':
-                // Check if tracker list is present
-                if (payload.data) {
-                    return {
-                        trackers: payload.data,
-                        loading: false,
-                        error: null
-                    }
-                }
-                // Setup error
+                // Get synced
+                const synced = {
+                    trackers: payload.trackers?.isSynced || state.synced.trackers,
+                    userSetting: payload.userSetting?.isSynced || state.synced.userSetting,
+                };
+                // Update data
                 return {
-                    trackers: [],
-                    loading: false,
-                    error: 'Update error: payload.data is undefined'
+                    trackers: payload.trackers?.items || state.trackers,
+                    userSetting: payload.userSetting?.item || state.userSetting,
+                    synced: synced,
+                    loading: !(synced.trackers && synced.userSetting),
+                    error: null
                 }
             case 'LOADING':
                 return {
@@ -60,6 +73,11 @@ export const Trackers = (): ReactElement => {
             case 'ERROR':
                 return {
                     trackers: [],
+                    userSetting: null,
+                    synced: {
+                        trackers: false,
+                        userSetting: false
+                    },
                     loading: false,
                     error: payload.error || 'General error'
                 }
@@ -68,6 +86,11 @@ export const Trackers = (): ReactElement => {
         }
     }, {
         trackers: [],
+        userSetting: null,
+        synced: {
+            trackers: false,
+            userSetting: false
+        },
         loading: true,
         error: null
     });
@@ -75,18 +98,21 @@ export const Trackers = (): ReactElement => {
     // States
     const [filter, setFilter] = useState<string>('');
 
+    /**
+     * Observe trackers
+     */
     useEffect(() => {
         // Setup loading
-        dispatch({type: 'LOADING'});
+        dispatch({action: 'LOADING'});
         // Observer trackers
         const obs = DataStore.observeQuery(Tracker, t => (
             t.or(t => t.title('contains', filter))
         )).subscribe(snapshot => {
-            // Check if isSynced
-            if (snapshot.isSynced) {
-                // Update list
-                dispatch({type: 'UPDATE', data: snapshot.items});
-            }
+            // Update list
+            dispatch({
+                action: 'UPDATE',
+                trackers: snapshot
+            });
         });
         // On exit
         return () => {
@@ -95,12 +121,50 @@ export const Trackers = (): ReactElement => {
         }
     }, [filter]);
 
+    /**
+     * Observe tracker view mode
+     */
+    useEffect(() => {
+        // Setup loading
+        dispatch({action: 'LOADING'});
+        // Observe view mode
+        DataStore.observeQuery(UserSetting).subscribe(snapshot => {
+            // Update view mode
+            dispatch({
+                action: 'UPDATE',
+                userSetting: {
+                    item: snapshot.items.length ? snapshot.items[0] : null,
+                    isSynced: snapshot.isSynced
+                }
+            });
+        })
+    }, []);
+
     const onFilter = (text: string) => {
         // Delay action
         delayCallback(() => {
             // Setup filters
             setFilter(text);
         })
+    }
+
+    const changeTrackersViewMode = async (mode: TrackerViewModes) => {
+        // Check if there is a user settings
+        if (userSetting) {
+            // Change view mode
+            await DataStore.save(
+                UserSetting.copyOf(userSetting, updated => {
+                    updated.trackerViewMode = mode;
+                })
+            );
+        } else {
+            // Create new user settings
+            await DataStore.save(
+                new UserSetting({
+                    trackerViewMode: mode
+                })
+            )
+        }
     }
 
     /**
@@ -300,6 +364,45 @@ export const Trackers = (): ReactElement => {
         )
     }
 
+    /**
+     * View trackers
+     */
+    const TrackerViewMemo = useMemo(() => {
+        // Get user setting
+        const viewMode = userSetting?.trackerViewMode;
+        // Get current view
+        if (!viewMode || viewMode === TrackerViewModes.CARD) {
+            return (
+                <TrackersCardView
+                    trackers={trackers}
+                    onAddTracker={addTracker}
+                    onStartTracker={startTracker}
+                    onUpdateTracker={updateTracker}
+                    onFinishTracker={finishTracker}
+                    onDeleteTracker={deleteTracker}
+                />
+            )
+        } else if (viewMode === TrackerViewModes.GRID) {
+            return (
+                <TrackersGridView
+                    trackers={trackers}
+                    onAddTracker={addTracker}
+                    onStartTracker={startTracker}
+                    onUpdateTracker={updateTracker}
+                    onFinishTracker={finishTracker}
+                    onDeleteTracker={deleteTracker}
+                />
+            )
+        }
+        // No view
+        return (
+            <Error
+                title='View not found'
+                description='Sorry, this view not working on this version'
+            />
+        )
+    }, [trackers, userSetting])
+
     return (
         <div className='page'>
             {/* AppBar - Title */}
@@ -321,13 +424,31 @@ export const Trackers = (): ReactElement => {
                     {/* Switch layout view */}
                     <div className="e-btn-group">
                         {/* Card */}
-                        <input type="radio" id="trackers-card-layout" name="trackers-layout"/>
-                        <label className="e-btn e-outline e-primary" htmlFor="trackers-card-layout">
+                        <input
+                            type="radio"
+                            id="trackers-card-layout"
+                            name="trackers-layout"
+                            checked={!userSetting || userSetting?.trackerViewMode === TrackerViewModes.CARD}
+                        />
+                        <label
+                            htmlFor="trackers-card-layout"
+                            className="e-btn e-outline e-primary"
+                            onClick={() => changeTrackersViewMode(TrackerViewModes.CARD)}
+                        >
                             <i className="fa-solid fa-table-columns"/>
                         </label>
                         {/* Grid */}
-                        <input type="radio" id="trackers-grid-layout" name="trackers-layout"/>
-                        <label className="e-btn e-outline e-primary" htmlFor="trackers-grid-layout">
+                        <input
+                            type="radio"
+                            id="trackers-grid-layout"
+                            name="trackers-layout"
+                            checked={userSetting?.trackerViewMode === TrackerViewModes.GRID}
+                        />
+                        <label
+                            htmlFor="trackers-grid-layout"
+                            className="e-btn e-outline e-primary"
+                            onClick={() => changeTrackersViewMode(TrackerViewModes.GRID)}
+                        >
                             <i className="fa-solid fa-table-list"/>
                         </label>
                     </div>
@@ -337,14 +458,7 @@ export const Trackers = (): ReactElement => {
             {
                 loading
                     ? <SkeletonComponent width='100%' height='350px'/>
-                    : <TrackersCardView
-                        trackers={trackers}
-                        onAddTracker={addTracker}
-                        onStartTracker={startTracker}
-                        onUpdateTracker={updateTracker}
-                        onFinishTracker={finishTracker}
-                        onDeleteTracker={deleteTracker}
-                    />
+                    : TrackerViewMemo
             }
         </div>
     )

@@ -1,17 +1,18 @@
-import React, {ReactElement} from 'react';
-import {Authenticator} from '@aws-amplify/ui-react';
+import React, {ReactElement, useEffect} from 'react';
+import {Authenticator, useAuthenticator} from '@aws-amplify/ui-react';
 import {Outlet, useNavigate} from 'react-router-dom';
 import {ButtonComponent} from '@syncfusion/ej2-react-buttons';
 import {SidebarComponent} from "@syncfusion/ej2-react-navigations";
 import Logo from '../../public/logo.svg';
-import {DropDownListComponent} from "@syncfusion/ej2-react-dropdowns";
 import ItalyFlag from '@images/flags/italy.png';
-import UKFlag from '@images/flags/united-kingdom.png.png';
+import {DataStore} from "aws-amplify";
+import {Languages, TrackerViewModes, UserSetting} from "@models/index";
 
 export const AuthRoutes = (): ReactElement => {
 
     // Hooks
     const navigate = useNavigate();
+    const {route} = useAuthenticator(context => [context.route]);
 
     // Authenticator fields settings
     const formFields = {
@@ -25,6 +26,33 @@ export const AuthRoutes = (): ReactElement => {
         }
     }
 
+    // Default User settings
+    useEffect(() => {
+        if (route === "authenticated") {
+            const obs = DataStore.observeQuery(UserSetting).subscribe(snapshot => {
+                if (snapshot.isSynced && snapshot.items.length === 0) {
+                    // Create default user settings
+                    DataStore.save(
+                        new UserSetting({
+                            language: Languages.EN,
+                            trackerViewMode: TrackerViewModes.CARD,
+                            trackerAutoStart: false,
+                            trackerStopOnNewStart: true
+                        })
+                    ).then(() => {
+                        // Console log
+                        console.log('UserSettings DEFAULTS');
+                        // Unsubscribe
+                        obs.unsubscribe();
+                    })
+                } else if (snapshot.isSynced) {
+                    // Unsubscribe
+                    obs.unsubscribe();
+                }
+            });
+        }
+    }, [route]);
+
     return (
         <Authenticator loginMechanisms={['email']} formFields={formFields}>
             {
@@ -34,6 +62,7 @@ export const AuthRoutes = (): ReactElement => {
                         <SidebarComponent
                             width='300px'
                             isOpen={true}
+                            enableGestures={false}
                         >
                             <div className='h-full bg-primary p-5 space-y-5'>
                                 {/* Logo image */}

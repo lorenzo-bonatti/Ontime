@@ -1,5 +1,15 @@
 import { ModelInit, MutableModel } from "@aws-amplify/datastore";
 
+export enum Languages {
+  IT = "IT",
+  EN = "EN"
+}
+
+export enum TrackerViewModes {
+  CARD = "CARD",
+  GRID = "GRID"
+}
+
 export enum WorkLogState {
   PENDING = "PENDING",
   LOGGED = "LOGGED",
@@ -27,8 +37,10 @@ type TrackerMetaData = {
 
 export declare class UserSetting {
   readonly id: string;
+  readonly language?: Languages | keyof typeof Languages | null;
   readonly trackerAutoStart?: boolean | null;
   readonly trackerStopOnNewStart?: boolean | null;
+  readonly trackerViewMode?: TrackerViewModes | keyof typeof TrackerViewModes | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
   constructor(init: ModelInit<UserSetting, UserSettingMetaData>);

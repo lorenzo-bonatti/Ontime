@@ -1,7 +1,19 @@
+enum Languages {
+  IT
+  EN
+}
+
+enum TrackerViewModes {
+  CARD
+  GRID
+}
+
 type UserSetting @model @auth(rules: [{allow: owner}]) {
   id: ID!
+  language: Languages
   trackerAutoStart: Boolean
   trackerStopOnNewStart: Boolean
+  trackerViewMode: TrackerViewModes
 }
 
 type WorkLog @model @auth(rules: [{allow: owner}]) {
