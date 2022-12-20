@@ -10,6 +10,7 @@ import {AppBarComponent} from "@syncfusion/ej2-react-navigations";
 import {delayCallback} from "../../utils";
 import {SkeletonComponent} from "@syncfusion/ej2-react-notifications";
 import {TrackersCardView} from "@components/trackers-card-view";
+import {TrackersGridView} from "@components/trackers-grid-view";
 
 export const Trackers = (): ReactElement => {
 
@@ -382,7 +383,16 @@ export const Trackers = (): ReactElement => {
                 />
             )
         } else if (viewMode === TrackerViewModes.GRID) {
-            return <>Grid</>
+            return (
+                <TrackersGridView
+                    trackers={trackers}
+                    onAddTracker={addTracker}
+                    onStartTracker={startTracker}
+                    onUpdateTracker={updateTracker}
+                    onFinishTracker={finishTracker}
+                    onDeleteTracker={deleteTracker}
+                />
+            )
         }
         // No view
         return (
