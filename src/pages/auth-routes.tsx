@@ -62,6 +62,7 @@ export const AuthRoutes = (): ReactElement => {
                         <SidebarComponent
                             width='300px'
                             isOpen={true}
+                            enableGestures={false}
                         >
                             <div className='h-full bg-primary p-5 space-y-5'>
                                 {/* Logo image */}
