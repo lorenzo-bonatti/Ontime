@@ -7,6 +7,7 @@ import {ButtonComponent} from '@syncfusion/ej2-react-buttons';
 import {DialogUtility} from '@syncfusion/ej2-popups';
 import {Dialog} from '@syncfusion/ej2-react-popups';
 import {delayCallback} from '../../utils';
+import {TrackerDuration} from "@components/tracker-duration";
 
 interface TrackerTimerProps {
     /**
@@ -80,10 +81,6 @@ export const TrackerTimer = (
         }
     }, {data: tracker, prev: null});
 
-    // Timer duration
-    const timer = useRef<NodeJS.Timer>();
-    const [duration, setDuration] = useState<string>('00:00:00');
-
     // Listen updates from parent
     useEffect(() => {
         // Update reducer
@@ -100,32 +97,6 @@ export const TrackerTimer = (
             }));
         }
     }, [data, prev]);
-
-    /**
-     * Timer
-     * Setup interval and calculate the time difference
-     * from the start and the current time
-     */
-    useEffect(() => {
-        // Check if state is START and startedAt is present
-        if (data.state === TrackerState.START && data.startedAt) {
-            // Set timer interval
-            timer.current = setInterval(() => {
-                // Get duration
-                setDuration(moment.utc(moment().diff(data.startedAt)).format('HH:mm:ss'));
-            }, 1000);
-        }
-        // Clear timer on change
-        return () => {
-            // Check if timer is not null
-            if (timer.current) {
-                // Clear interval
-                clearInterval(timer.current);
-                // Clear duration
-                setDuration('00:00:00');
-            }
-        }
-    }, [data.state, data.startedAt]);
 
     const start = async () => {
         try {
@@ -248,7 +219,7 @@ export const TrackerTimer = (
             <div>
                 {/* Start at */}
                 {StartAtMemo}
-                <p className='text-sm p-1'>Duration: {duration}</p>
+                <p className='text-sm p-1'>Duration: {TrackerDuration(data)}</p>
             </div>
             {/* Action buttons */}
             <div className="flex flex-row space-x-2.5">
