@@ -1,6 +1,6 @@
+import React from "react";
 import {TrackerTimer} from "@components/tracker-timer";
 import {AddTracker} from "@components/add-tracker";
-import React from "react";
 import {Tracker} from "@models/index";
 
 interface Props {

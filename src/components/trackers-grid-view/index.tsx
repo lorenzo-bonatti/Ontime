@@ -1,10 +1,10 @@
-import React, {ReactElement, useRef} from "react";
-import {Tracker, TrackerState} from "@models/index";
-import {CommandColumn, Edit, GridColumn, GridComponent, Toolbar} from "@syncfusion/ej2-react-grids";
-import {Inject} from "@syncfusion/ej2-react-treegrid";
-import {TextBox} from "@syncfusion/ej2-react-inputs";
+import React, { ReactElement, useRef } from "react";
+import { Tracker, TrackerState } from "@models/index";
+import { CommandColumn, Edit, GridColumn, GridComponent, Toolbar } from "@syncfusion/ej2-react-grids";
+import { Inject } from "@syncfusion/ej2-react-treegrid";
+import { TextBox } from "@syncfusion/ej2-react-inputs";
 import moment from "moment";
-import {TrackerDuration} from "@components/tracker-duration";
+import { TrackerDuration } from "@components/tracker-duration";
 
 interface Props {
     trackers: Tracker[]
@@ -37,11 +37,12 @@ export const TrackersGridView = (
             height='100%'
             rowHeight={50}
             gridLines='Both'
+            loadingIndicator={{ indicatorType: 'Shimmer' }}
             // Data source
             dataSource={trackers}
             columns={[
-                {field: 'id', isPrimaryKey: true, visible: false},
-                {field: 'title', headerText: 'Title'},
+                { field: 'id', isPrimaryKey: true, visible: false },
+                { field: 'title', headerText: 'Title' },
                 {
                     field: 'logDescription',
                     headerText: 'Log Description',
@@ -82,7 +83,7 @@ export const TrackersGridView = (
                     headerText: 'Start at',
                     type: 'datetime',
                     editType: 'datetimepickeredit',
-                    format: {type: 'dateTime', skeleton: 'medium'},
+                    format: { type: 'dateTime', skeleton: 'medium' },
                 },
                 {
                     field: 'duration',
@@ -238,7 +239,7 @@ export const TrackersGridView = (
                 }
             }}
         >
-            <Inject services={[Toolbar, Edit, CommandColumn]}/>
+            <Inject services={[Toolbar, Edit, CommandColumn]} />
         </GridComponent>
     )
 }
