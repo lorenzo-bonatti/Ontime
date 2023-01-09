@@ -2,6 +2,16 @@
 import { initSchema } from '@aws-amplify/datastore';
 import { schema } from './schema';
 
+const DashboardTrackersPagination = {
+  "THREE": "THREE",
+  "SEVEN": "SEVEN"
+};
+
+const TrackerViewSort = {
+  "CREATED_AT": "CREATED_AT",
+  "UPDATED_AT": "UPDATED_AT"
+};
+
 const Languages = {
   "IT": "IT",
   "EN": "EN"
@@ -31,6 +41,8 @@ export {
   UserSetting,
   WorkLog,
   Tracker,
+  DashboardTrackersPagination,
+  TrackerViewSort,
   Languages,
   TrackerViewModes,
   WorkLogState,

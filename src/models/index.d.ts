@@ -1,4 +1,16 @@
 import { ModelInit, MutableModel } from "@aws-amplify/datastore";
+// @ts-ignore
+import { LazyLoading, LazyLoadingDisabled } from "@aws-amplify/datastore";
+
+export enum DashboardTrackersPagination {
+  THREE = "THREE",
+  SEVEN = "SEVEN"
+}
+
+export enum TrackerViewSort {
+  CREATED_AT = "CREATED_AT",
+  UPDATED_AT = "UPDATED_AT"
+}
 
 export enum Languages {
   IT = "IT",
@@ -35,19 +47,37 @@ type TrackerMetaData = {
   readOnlyFields: 'createdAt' | 'updatedAt';
 }
 
-export declare class UserSetting {
+type EagerUserSetting = {
   readonly id: string;
   readonly language?: Languages | keyof typeof Languages | null;
   readonly trackerAutoStart?: boolean | null;
   readonly trackerStopOnNewStart?: boolean | null;
   readonly trackerViewMode?: TrackerViewModes | keyof typeof TrackerViewModes | null;
+  readonly trackerViewSort?: TrackerViewSort | keyof typeof TrackerViewSort | null;
+  readonly dashboardTrackersPagination?: DashboardTrackersPagination | keyof typeof DashboardTrackersPagination | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
-  constructor(init: ModelInit<UserSetting, UserSettingMetaData>);
-  static copyOf(source: UserSetting, mutator: (draft: MutableModel<UserSetting, UserSettingMetaData>) => MutableModel<UserSetting, UserSettingMetaData> | void): UserSetting;
 }
 
-export declare class WorkLog {
+type LazyUserSetting = {
+  readonly id: string;
+  readonly language?: Languages | keyof typeof Languages | null;
+  readonly trackerAutoStart?: boolean | null;
+  readonly trackerStopOnNewStart?: boolean | null;
+  readonly trackerViewMode?: TrackerViewModes | keyof typeof TrackerViewModes | null;
+  readonly trackerViewSort?: TrackerViewSort | keyof typeof TrackerViewSort | null;
+  readonly dashboardTrackersPagination?: DashboardTrackersPagination | keyof typeof DashboardTrackersPagination | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+export declare type UserSetting = LazyLoading extends LazyLoadingDisabled ? EagerUserSetting : LazyUserSetting
+
+export declare const UserSetting: (new (init: ModelInit<UserSetting, UserSettingMetaData>) => UserSetting) & {
+  copyOf(source: UserSetting, mutator: (draft: MutableModel<UserSetting, UserSettingMetaData>) => MutableModel<UserSetting, UserSettingMetaData> | void): UserSetting;
+}
+
+type EagerWorkLog = {
   readonly id: string;
   readonly title: string;
   readonly description?: string | null;
@@ -58,11 +88,28 @@ export declare class WorkLog {
   readonly state: WorkLogState | keyof typeof WorkLogState;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
-  constructor(init: ModelInit<WorkLog, WorkLogMetaData>);
-  static copyOf(source: WorkLog, mutator: (draft: MutableModel<WorkLog, WorkLogMetaData>) => MutableModel<WorkLog, WorkLogMetaData> | void): WorkLog;
 }
 
-export declare class Tracker {
+type LazyWorkLog = {
+  readonly id: string;
+  readonly title: string;
+  readonly description?: string | null;
+  readonly startedAt: string;
+  readonly endedAt: string;
+  readonly ttid?: string | null;
+  readonly logServiceObject?: string | null;
+  readonly state: WorkLogState | keyof typeof WorkLogState;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+export declare type WorkLog = LazyLoading extends LazyLoadingDisabled ? EagerWorkLog : LazyWorkLog
+
+export declare const WorkLog: (new (init: ModelInit<WorkLog, WorkLogMetaData>) => WorkLog) & {
+  copyOf(source: WorkLog, mutator: (draft: MutableModel<WorkLog, WorkLogMetaData>) => MutableModel<WorkLog, WorkLogMetaData> | void): WorkLog;
+}
+
+type EagerTracker = {
   readonly id: string;
   readonly title: string;
   readonly logDescription?: string | null;
@@ -70,8 +117,26 @@ export declare class Tracker {
   readonly state: TrackerState | keyof typeof TrackerState;
   readonly ttid?: string | null;
   readonly logServiceObject?: string | null;
+  readonly favorite?: boolean | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
-  constructor(init: ModelInit<Tracker, TrackerMetaData>);
-  static copyOf(source: Tracker, mutator: (draft: MutableModel<Tracker, TrackerMetaData>) => MutableModel<Tracker, TrackerMetaData> | void): Tracker;
+}
+
+type LazyTracker = {
+  readonly id: string;
+  readonly title: string;
+  readonly logDescription?: string | null;
+  readonly startedAt?: string | null;
+  readonly state: TrackerState | keyof typeof TrackerState;
+  readonly ttid?: string | null;
+  readonly logServiceObject?: string | null;
+  readonly favorite?: boolean | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+export declare type Tracker = LazyLoading extends LazyLoadingDisabled ? EagerTracker : LazyTracker
+
+export declare const Tracker: (new (init: ModelInit<Tracker, TrackerMetaData>) => Tracker) & {
+  copyOf(source: Tracker, mutator: (draft: MutableModel<Tracker, TrackerMetaData>) => MutableModel<Tracker, TrackerMetaData> | void): Tracker;
 }

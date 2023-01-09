@@ -42,6 +42,24 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "trackerViewSort": {
+                    "name": "trackerViewSort",
+                    "isArray": false,
+                    "type": {
+                        "enum": "TrackerViewSort"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "dashboardTrackersPagination": {
+                    "name": "dashboardTrackersPagination",
+                    "isArray": false,
+                    "type": {
+                        "enum": "DashboardTrackersPagination"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -247,6 +265,13 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "favorite": {
+                    "name": "favorite",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -294,6 +319,20 @@ export const schema = {
         }
     },
     "enums": {
+        "DashboardTrackersPagination": {
+            "name": "DashboardTrackersPagination",
+            "values": [
+                "THREE",
+                "SEVEN"
+            ]
+        },
+        "TrackerViewSort": {
+            "name": "TrackerViewSort",
+            "values": [
+                "CREATED_AT",
+                "UPDATED_AT"
+            ]
+        },
         "Languages": {
             "name": "Languages",
             "values": [
@@ -327,5 +366,6 @@ export const schema = {
         }
     },
     "nonModels": {},
-    "version": "6da27a41da571e1632eabb97ecabac96"
+    "codegenVersion": "3.3.4",
+    "version": "b4df2a579c91d9ca307050c3853e8bfd"
 };

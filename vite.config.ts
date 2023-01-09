@@ -11,6 +11,7 @@ export default defineConfig({
       '@components': '/src/components',
       '@models': '/src/models',
       '@images': '/images',
+      '@context': '/src/context',
       // Amplify fix
       './runtimeConfig': './runtimeConfig.browser'
     }

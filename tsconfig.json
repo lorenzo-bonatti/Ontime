@@ -13,7 +13,10 @@
       ],
       "@images/*": [
         "images/*"
-      ]
+      ],
+      "@context/*": [
+        "src/context/*"
+      ],
     },
     "target": "ESNext",
     "useDefineForClassFields": true,

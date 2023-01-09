@@ -1,3 +1,13 @@
+enum DashboardTrackersPagination {
+  THREE
+  SEVEN
+}
+
+enum TrackerViewSort {
+  CREATED_AT
+  UPDATED_AT
+}
+
 enum Languages {
   IT
   EN
@@ -14,6 +24,8 @@ type UserSetting @model @auth(rules: [{allow: owner}]) {
   trackerAutoStart: Boolean
   trackerStopOnNewStart: Boolean
   trackerViewMode: TrackerViewModes
+  trackerViewSort: TrackerViewSort
+  dashboardTrackersPagination: DashboardTrackersPagination
 }
 
 type WorkLog @model @auth(rules: [{allow: owner}]) {
@@ -35,6 +47,7 @@ type Tracker @model @auth(rules: [{allow: owner}]) {
   state: TrackerState!
   ttid: ID
   logServiceObject: AWSJSON
+  favorite: Boolean
 }
 
 enum TrackerState {
