@@ -1,18 +1,20 @@
-import React, {ReactElement, useEffect} from 'react';
-import {Authenticator, useAuthenticator} from '@aws-amplify/ui-react';
-import {Outlet, useNavigate} from 'react-router-dom';
-import {ButtonComponent} from '@syncfusion/ej2-react-buttons';
-import {SidebarComponent} from "@syncfusion/ej2-react-navigations";
+import React, { ReactElement, useEffect, useState } from 'react';
+import { Authenticator, useAuthenticator } from '@aws-amplify/ui-react';
+import { Outlet, useNavigate } from 'react-router-dom';
+import { ButtonComponent } from '@syncfusion/ej2-react-buttons';
+import { SidebarComponent } from "@syncfusion/ej2-react-navigations";
 import Logo from '../../public/logo.svg';
 import ItalyFlag from '@images/flags/italy.png';
-import {DataStore} from "aws-amplify";
-import {Languages, TrackerViewModes, UserSetting} from "@models/index";
+import { DataStore } from "aws-amplify";
+import { DashboardTrackersPagination, Languages, TrackerViewModes, TrackerViewSort, UserSetting } from "@models/index";
+import { UserSettingsProvider } from '@context/user-settings';
+import { Loading } from './loading';
 
 export const AuthRoutes = (): ReactElement => {
 
     // Hooks
     const navigate = useNavigate();
-    const {route} = useAuthenticator(context => [context.route]);
+    const { route } = useAuthenticator(context => [context.route]);
 
     // Authenticator fields settings
     const formFields = {
@@ -26,10 +28,14 @@ export const AuthRoutes = (): ReactElement => {
         }
     }
 
+    // State
+    const [userSettings, setUserSettings] = useState<UserSetting | null>(null);
+
     // Default User settings
     useEffect(() => {
         if (route === "authenticated") {
             const obs = DataStore.observeQuery(UserSetting).subscribe(snapshot => {
+                // Check if there are no user settings
                 if (snapshot.isSynced && snapshot.items.length === 0) {
                     // Create default user settings
                     DataStore.save(
@@ -37,17 +43,14 @@ export const AuthRoutes = (): ReactElement => {
                             language: Languages.EN,
                             trackerViewMode: TrackerViewModes.CARD,
                             trackerAutoStart: false,
-                            trackerStopOnNewStart: true
+                            trackerStopOnNewStart: true,
+                            trackerViewSort: TrackerViewSort.CREATED_AT,
+                            dashboardTrackersPagination: DashboardTrackersPagination.THREE
                         })
-                    ).then(() => {
-                        // Console log
-                        console.log('UserSettings DEFAULTS');
-                        // Unsubscribe
-                        obs.unsubscribe();
-                    })
+                    );
                 } else if (snapshot.isSynced) {
-                    // Unsubscribe
-                    obs.unsubscribe();
+                    // Set user settings
+                    setUserSettings(snapshot.items[0]);
                 }
             });
         }
@@ -56,7 +59,7 @@ export const AuthRoutes = (): ReactElement => {
     return (
         <Authenticator loginMechanisms={['email']} formFields={formFields}>
             {
-                ({user, signOut}) => (
+                ({ user, signOut }) => (
                     <>
                         {/* Sidebar menu */}
                         <SidebarComponent
@@ -67,10 +70,10 @@ export const AuthRoutes = (): ReactElement => {
                             <div className='h-full bg-primary p-5 space-y-5'>
                                 {/* Logo image */}
                                 <div className="flex flex-row items-center w-1/2 p-2.5 space-x-2.5">
-                                    <img src={Logo} alt="Ontime logo" className='w-10'/>
+                                    <img src={Logo} alt="Ontime logo" className='w-10' />
                                     <p className='text-white text-xl'>Ontime</p>
                                 </div>
-                                <hr/>
+                                <hr />
                                 {/* Pages */}
                                 <ButtonComponent
                                     content='Dashboard'
@@ -122,7 +125,7 @@ export const AuthRoutes = (): ReactElement => {
                             <div className='flex justify-end items-center space-x-2.5 h-14 px-5 shadow'>
                                 {/* Language */}
                                 <ButtonComponent cssClass='e-flat'>
-                                    <img src={ItalyFlag} className='w- h-5' alt='Flag'/>
+                                    <img src={ItalyFlag} className='w- h-5' alt='Flag' />
                                 </ButtonComponent>
                                 {/* Notifications */}
                                 <ButtonComponent
@@ -142,7 +145,13 @@ export const AuthRoutes = (): ReactElement => {
                             </div>
                             {/* Content */}
                             <div className='auth-container overflow-y-auto'>
-                                <Outlet/>
+                                <UserSettingsProvider value={userSettings}>
+                                    {
+                                        userSettings
+                                            ? <Outlet />
+                                            : <Loading />
+                                    }
+                                </UserSettingsProvider>
                             </div>
                         </div>
                     </>
